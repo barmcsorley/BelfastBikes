@@ -1,8 +1,8 @@
 import type { RealtimeStationData } from '../types';
 
 const TARGET_API_URL = 'https://api.citybik.es/v2/networks/belfast-bikes';
-// Using a CORS proxy to bypass the browser's same-origin policy for local development.
-const API_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(TARGET_API_URL)}`;
+// Using a different, more reliable CORS proxy to bypass the browser's same-origin policy.
+const API_URL = `https://thingproxy.freeboard.io/fetch/${TARGET_API_URL}`;
 
 export const fetchRealtimeData = async (): Promise<Map<string, RealtimeStationData>> => {
   try {
