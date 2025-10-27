@@ -38,7 +38,11 @@ export default function App() {
         const data = await fetchRealtimeData();
         setRealtimeDataMap(data);
       } catch (e) {
-        setRealtimeError('Could not load live station data.');
+        if (e instanceof Error) {
+            setRealtimeError(e.message);
+        } else {
+            setRealtimeError('An unknown error occurred while loading live data.');
+        }
         console.error(e);
       } finally {
         setIsRealtimeLoading(false);
@@ -64,7 +68,11 @@ export default function App() {
       const result = await predictBikeAvailability(selectedStation, selectedDay, selectedTime, selectedWeather, currentRealtimeData);
       setPrediction(result);
     } catch (e) {
-      setError('Failed to get a prediction. Please try again.');
+      if (e instanceof Error) {
+          setError(e.message);
+      } else {
+          setError('An unknown error occurred during prediction.');
+      }
       console.error(e);
     } finally {
       setIsLoading(false);
@@ -211,7 +219,7 @@ export default function App() {
                      </div>
                 )}
                 {realtimeError && !isRealtimeLoading && (
-                    <div className="flex items-center justify-center h-24 bg-red-900/20 border border-red-500 rounded-lg text-red-300 p-4">
+                    <div className="flex items-center justify-center text-center h-24 bg-red-900/20 border border-red-500 rounded-lg text-red-300 p-4">
                         <p>{realtimeError}</p>
                     </div>
                 )}
@@ -243,7 +251,7 @@ export default function App() {
                    </div>
                 )}
                  {error && (
-                    <div className="flex flex-col items-center justify-center h-48 bg-red-900/20 border border-red-500 rounded-lg text-red-300 p-4">
+                    <div className="flex flex-col items-center justify-center text-center h-48 bg-red-900/20 border border-red-500 rounded-lg text-red-300 p-4">
                         <p className="font-semibold">Error</p>
                         <p>{error}</p>
                     </div>

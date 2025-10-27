@@ -48,8 +48,9 @@ export const predictBikeAvailability = async (
     Provide your answer ONLY in the specified JSON format. Do not include any other text, explanation, or markdown formatting.
   `;
 
+  let response;
   try {
-    const response = await ai.models.generateContent({
+    response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
       config: {
@@ -57,7 +58,12 @@ export const predictBikeAvailability = async (
         responseSchema: schema,
       },
     });
+  } catch (error) {
+    console.error("Error calling Gemini API:", error);
+    throw new Error("The AI prediction service failed to respond.");
+  }
 
+  try {
     const jsonString = response.text.trim();
     const parsedResponse = JSON.parse(jsonString);
     
@@ -65,10 +71,12 @@ export const predictBikeAvailability = async (
       // Ensure prediction is within valid range
       return Math.max(0, Math.min(station.totalDocks, Math.round(parsedResponse.predictedBikes)));
     } else {
-      throw new Error("Invalid prediction format received from AI.");
+      console.error("Invalid prediction format received:", parsedResponse);
+      throw new Error("The AI returned an invalid prediction format.");
     }
   } catch (error) {
-    console.error("Error calling Gemini API:", error);
-    throw new Error("Failed to get a valid prediction from the AI model.");
+    console.error("Error parsing prediction response:", error);
+    console.log("Raw AI response text:", response.text);
+    throw new Error("The AI returned a malformed response.");
   }
 };
