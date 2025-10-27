@@ -1,0 +1,5 @@
+{
+  "name": "Copy of Belfast Bikes Predictor",
+  "description": "A web application that uses a simple machine learning model (powered by Gemini) to predict the availability of Belfast Bikes at specific stations based on historical data patterns.",
+  "requestFramePermissions": []
+}
